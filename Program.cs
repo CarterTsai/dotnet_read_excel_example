@@ -1,4 +1,5 @@
-﻿using dotnet_read_excel_example.Service.Execl;
+﻿using System;
+using dotnet_read_excel_example.Service.Execl;
 
 namespace read_execl
 { 
@@ -6,8 +7,9 @@ namespace read_execl
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             var e = new ExeclService();
-            e.Read(@"test.xlsx");
+            var table = e.Read(@"test.xlsx");
         }
     }
 }

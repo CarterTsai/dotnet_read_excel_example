@@ -7,14 +7,20 @@ using dotnet_read_excel_example.Service.Model;
 
 namespace dotnet_read_excel_example.Service.Execl
 {
-    public class ExeclService: IService
+    public class ExeclService : IService
     {
-        public void Read(string filepath) {
+        public IEnumerable<TablesModel> Read(string filepath, bool debug = false)
+        {
             var data = ReadModelList(filepath);
-            foreach (var item in data)
+            if (debug)
             {
-                Console.WriteLine($"{item.Key}\t{item.Column}\t{item.DataType}\t{item.IsNull}\t{item.ColumnName}\t{item.DefaultValue}\t{item.Comment}");
+                foreach (var item in data)
+                {
+                    Console.WriteLine($"{item.Key}\t{item.Column}\t{item.DataType}\t{item.IsNull}\t{item.ColumnName}\t{item.DefaultValue}\t{item.Comment}");
+                }
             }
+
+            return data;
         }
 
         public static IEnumerable<TablesModel> ReadModelList(string filepath)
@@ -23,7 +29,7 @@ namespace dotnet_read_excel_example.Service.Execl
             {
                 WorkbookPart wbPart = spreadsheetDocument.WorkbookPart;
                 var theSheets = wbPart.Workbook;
-                var tableData = new List<TablesModel>{};
+                var tableData = new List<TablesModel> { };
 
                 var _sheet = new Dictionary<string, string>(); // sheet id, sheet name
 
@@ -61,14 +67,15 @@ namespace dotnet_read_excel_example.Service.Execl
                             {
                                 var _cell = r.Descendants<Cell>()
                                          .Select(o => GetCellText(o, wbPart.SharedStringTablePart.SharedStringTable)).ToList();
-                                var t = new TablesModel{
-                                    Key = (_cell[1] != null)?_cell[1].Trim():"",
-                                    Column = (_cell[2] != null)?_cell[2].Trim():"",
-                                    DataType = (_cell[3] != null)?_cell[3].Trim():"",
-                                    IsNull  = (_cell[4] != null)?_cell[4].Trim():"",
-                                    ColumnName = (_cell[5] != null)?_cell[5].Trim():"",
-                                    DefaultValue = (_cell[6] != null)?_cell[6].Trim():"",
-                                    Comment = (_cell[7] != null)?_cell[7].Trim():"",
+                                var t = new TablesModel
+                                {
+                                    Key = (_cell[1] != null) ? _cell[1].Trim() : "",
+                                    Column = (_cell[2] != null) ? _cell[2].Trim() : "",
+                                    DataType = (_cell[3] != null) ? _cell[3].Trim() : "",
+                                    IsNull = (_cell[4] != null) ? _cell[4].Trim() : "",
+                                    ColumnName = (_cell[5] != null) ? _cell[5].Trim() : "",
+                                    DefaultValue = (_cell[6] != null) ? _cell[6].Trim() : "",
+                                    Comment = (_cell[7] != null) ? _cell[7].Trim() : "",
                                 };
 
                                 tableData.Add(t);
